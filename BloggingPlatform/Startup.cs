@@ -4,9 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BloggingPlatform.Data;
 using BloggingPlatform.Infrastructure.Extensions;
+using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
+using BloggingPlatform.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -58,7 +61,8 @@ namespace BloggingPlatform
                 });
 
             services.AddDbContext<DataContext>(cont => cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddAutoMapper(typeof(AuthService).Assembly);
             services.AddControllers();
         }
 
