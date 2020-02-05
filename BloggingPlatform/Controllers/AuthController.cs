@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
+using BloggingPlatform.DTO;
 using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +32,30 @@ namespace BloggingPlatform.Controllers
             this.service = service;
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginDto userLoginDto)
+        {
+            var user = await userManager.FindByEmailAsync(userLoginDto.Email);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await signInManager.CheckPasswordSignInAsync(user, userLoginDto.Password, false);
+
+            if (result.Succeeded)
+            {
+                var appUser = mapper.Map<UserForListDto>(user);
+                return Ok(new
+                {
+                    //token: TO DO
+                    user = appUser
+                });
+            }
+            return Unauthorized();
         }
     }
 }
