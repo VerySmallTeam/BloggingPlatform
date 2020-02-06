@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BloggingPlatform.Infrastructure.Helpers;
 
 namespace BloggingPlatform.Controllers
 {
@@ -37,6 +38,11 @@ namespace BloggingPlatform.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
         {
+            if (!RequestValidation.IsRequestValid<UserLoginDto>(userLoginDto))
+            {
+                return BadRequest("Invalid request");
+            }
+
             var user = await userManager.FindByEmailAsync(userLoginDto.Email);
 
             if (user == null)
