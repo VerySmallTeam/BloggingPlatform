@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration;
 using BloggingPlatform.DTO;
 using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,7 @@ namespace BloggingPlatform.Controllers
                 var appUser = mapper.Map<UserForListDto>(user);
                 return Ok(new
                 {
-                    //token: TO DO
+                    token = service.GenerateJwtToken(user, userManager, config).Result,
                     user = appUser
                 });
             }

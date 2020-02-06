@@ -1,6 +1,6 @@
-﻿using AutoMapper.Configuration;
-using BloggingPlatform.Models;
+﻿using BloggingPlatform.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
