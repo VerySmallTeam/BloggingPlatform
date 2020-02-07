@@ -13,6 +13,7 @@ namespace BloggingPlatform.Data.Configs
         public MappingProfileConfiguration()
         {
             CreateMap<User, UserForListDto>();
+            CreateMap<UserForRegisterDto, User>();
         }
     }
 }

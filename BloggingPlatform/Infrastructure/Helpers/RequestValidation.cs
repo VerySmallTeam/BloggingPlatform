@@ -7,7 +7,7 @@ namespace BloggingPlatform.Infrastructure.Helpers
 {
     public class RequestValidation
     {
-        public static bool IsRequestValid<T>(T obj)
+        public static bool IsRequestValid<T>(T obj) where T : class
         {
             foreach (var property in obj.GetType().GetProperties())
             {

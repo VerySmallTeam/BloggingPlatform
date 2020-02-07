@@ -40,7 +40,9 @@ namespace BloggingPlatform
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityBuilder builder = services.AddIdentityCore<User>();
+            IdentityBuilder builder = services.AddIdentityCore<User>(options => {
+                options.User.RequireUniqueEmail = true;
+            });
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -61,6 +63,18 @@ namespace BloggingPlatform
                 });
 
             services.AddDbContext<DataContext>(cont => cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(AuthService).Assembly);
             services.AddControllers();
@@ -91,7 +105,7 @@ namespace BloggingPlatform
                 });
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthentication();
 

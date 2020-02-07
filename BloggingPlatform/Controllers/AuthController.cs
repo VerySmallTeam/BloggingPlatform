@@ -63,5 +63,24 @@ namespace BloggingPlatform.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
+        {
+            if (!RequestValidation.IsRequestValid<UserForRegisterDto>(userForRegisterDto))
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var newUser = mapper.Map<User>(userForRegisterDto);
+
+            var result = await userManager.CreateAsync(newUser, userForRegisterDto.Password);
+            if (result.Succeeded)
+            {
+                return StatusCode(201); // temporarly
+                // return CreatedAtRoute();
+            }
+            return BadRequest(result.Errors);
+        }
     }
 }
