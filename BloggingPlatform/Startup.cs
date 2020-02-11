@@ -4,9 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BloggingPlatform.Data;
 using BloggingPlatform.Infrastructure.Extensions;
+using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
+using BloggingPlatform.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +40,9 @@ namespace BloggingPlatform
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityBuilder builder = services.AddIdentityCore<User>();
+            IdentityBuilder builder = services.AddIdentityCore<User>(options => {
+                options.User.RequireUniqueEmail = true;
+            });
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -59,6 +64,19 @@ namespace BloggingPlatform
 
             services.AddDbContext<DataContext>(cont => cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddAutoMapper(typeof(AuthService).Assembly);
             services.AddControllers();
         }
 
@@ -87,7 +105,7 @@ namespace BloggingPlatform
                 });
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
