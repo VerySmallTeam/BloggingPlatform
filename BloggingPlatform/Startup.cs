@@ -62,7 +62,11 @@ namespace BloggingPlatform
                     };
                 });
 
-            services.AddDbContext<DataContext>(cont => cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(cont => 
+            {
+                cont.UseLazyLoadingProxies();
+                cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); 
+            });
 
             services.AddControllers(options =>
             {

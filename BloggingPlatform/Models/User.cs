@@ -17,6 +17,7 @@ namespace BloggingPlatform.Models
         public DateTime LastActive { get; set; }
         public string Avatar { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
+        public virtual Blog Blog { get; set; }
     }
 
     public enum Gender
