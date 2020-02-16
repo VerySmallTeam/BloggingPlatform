@@ -74,6 +74,13 @@ namespace BloggingPlatform.Controllers
 
             var newUser = mapper.Map<User>(userForRegisterDto);
 
+            newUser.Blog = new Blog
+            {
+                BlogName = userForRegisterDto.BlogName,
+                Author = newUser,
+                AuthorId = newUser.Id,
+            };
+
             var result = await userManager.CreateAsync(newUser, userForRegisterDto.Password);
             if (result.Succeeded)
             {
