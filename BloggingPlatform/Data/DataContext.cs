@@ -19,6 +19,7 @@ namespace BloggingPlatform.Data
         {
             base.OnModelCreating(builder);
 
+            #region UserRole
             builder.Entity<UserRole>(userRole =>
             {
                 userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
@@ -33,6 +34,55 @@ namespace BloggingPlatform.Data
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
             });
+            #endregion
+
+            #region User
+            builder.Entity<User>()
+                .HasOne(b => b.Blog)
+                .WithOne(u => u.Author)
+                .HasForeignKey<Blog>(k => k.AuthorId);
+            #endregion
+
+            #region Blog
+            builder.Entity<Blog>()
+                .HasMany(p => p.Posts)
+                .WithOne(b => b.Blog)
+                .HasForeignKey(k => k.BlogId);
+            #endregion
+
+            #region Like
+            builder.Entity<Like>()
+               .HasKey(k => new { k.PostId, k.LikerId });
+
+            builder.Entity<Like>()
+                .HasOne(p => p.Post)
+                .WithMany(l => l.Likes)
+                .HasForeignKey(k => k.PostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Like>()
+                .HasOne(u => u.Liker)
+                .WithMany(p => p.LikedPosts)
+                .HasForeignKey(k => k.LikerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            #endregion
+
+            #region Comment
+            builder.Entity<Comment>()
+               .HasKey(k => new { k.PostId, k.CommenterId });
+
+            builder.Entity<Comment>()
+                .HasOne(p => p.Post)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(k => k.PostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Comment>()
+                .HasOne(u => u.Commenter)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(k => k.CommenterId)
+                .OnDelete(DeleteBehavior.Restrict);
+            #endregion
         }
     }
 }

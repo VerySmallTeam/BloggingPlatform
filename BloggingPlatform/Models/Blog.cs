@@ -10,7 +10,7 @@ namespace BloggingPlatform.Models
         public int Id { get; set; }
         public string BlogName { get; set; }
         public int AuthorId { get; set; }
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
     }
 }

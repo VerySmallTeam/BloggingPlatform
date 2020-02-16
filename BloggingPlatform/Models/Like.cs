@@ -9,7 +9,7 @@ namespace BloggingPlatform.Models
     {
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
-        public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public int LikerId { get; set; }
+        public virtual User Liker { get; set; }
     }
 }

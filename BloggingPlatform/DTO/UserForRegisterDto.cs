@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BloggingPlatform.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,12 +20,15 @@ namespace BloggingPlatform.DTO
         [Required]
         public string LastName { get; set; }
         [Required]
+        public string BlogName { get; set; }
+        [Required]
         [EnumDataType(typeof(Gender))]
         public Gender Gender { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
+        //public Blog Blog { get; set; }
         public UserForRegisterDto()
         {
             Created = DateTime.Now;
