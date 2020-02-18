@@ -61,6 +61,7 @@ namespace BloggingPlatform
                         ValidateAudience = false //localhost
                     };
                 });
+            services.AddCors();
 
             services.AddDbContext<DataContext>(cont => 
             {
@@ -113,6 +114,8 @@ namespace BloggingPlatform
             //app.UseHttpsRedirection();
 
             app.UseAuthentication();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
 
