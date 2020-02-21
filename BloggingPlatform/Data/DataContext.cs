@@ -13,7 +13,9 @@ namespace BloggingPlatform.Data
         UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-        public DbSet<Post> Articles { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

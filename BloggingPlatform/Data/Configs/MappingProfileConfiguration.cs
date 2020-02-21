@@ -14,6 +14,8 @@ namespace BloggingPlatform.Data.Configs
         {
             CreateMap<User, UserForListDto>();
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<NewPostDto, Post>();
+            CreateMap<Post, PostToReturnDto>();
         }
     }
 }

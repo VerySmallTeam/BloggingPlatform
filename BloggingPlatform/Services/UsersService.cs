@@ -1,5 +1,4 @@
 ﻿using BloggingPlatform.Data;
-using BloggingPlatform.Infrastructure.Helpers;
 using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace BloggingPlatform.Services
 {
-    public class BlogService : IBlogService
+    public class UsersService : IUsersService
     {
         private readonly DataContext context;
-        public BlogService(DataContext context)
+        public UsersService(DataContext context)
         {
             this.context = context;
         }
@@ -32,14 +31,11 @@ namespace BloggingPlatform.Services
         {
             return await context.SaveChangesAsync() > 0;
         }
-        public async Task<PostsList<Post>> GetPostsList(PostsListParams postsListParams)
+
+        public async Task<User> GetUser(int id)
         {
-            var posts = context.Posts
-                .OrderByDescending(o => o.DateAdded)
-                .AsQueryable();
-
-            return await PostsList<Post>.CreateAsync(posts, postsListParams.PartNumber, postsListParams.PartSize);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return user;
         }
-
     }
 }

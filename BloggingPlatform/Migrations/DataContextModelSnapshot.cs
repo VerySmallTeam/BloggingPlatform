@@ -37,7 +37,7 @@ namespace BloggingPlatform.Migrations
                     b.HasIndex("AuthorId")
                         .IsUnique();
 
-                    b.ToTable("Blog");
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Comment", b =>
@@ -70,7 +70,7 @@ namespace BloggingPlatform.Migrations
 
                     b.HasIndex("LikerId");
 
-                    b.ToTable("Like");
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Post", b =>
@@ -96,7 +96,7 @@ namespace BloggingPlatform.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Role", b =>

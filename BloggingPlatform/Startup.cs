@@ -83,6 +83,7 @@ namespace BloggingPlatform
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(AuthService).Assembly);
             services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddControllers();
         }
 

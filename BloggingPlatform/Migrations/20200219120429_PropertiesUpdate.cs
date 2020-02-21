@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BloggingPlatform.Migrations
 {
-    public partial class AddBasicBlogStructure : Migration
+    public partial class PropertiesUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -163,7 +163,7 @@ namespace BloggingPlatform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Blog",
+                name: "Blogs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -173,9 +173,9 @@ namespace BloggingPlatform.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Blog", x => x.Id);
+                    table.PrimaryKey("PK_Blogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Blog_AspNetUsers_AuthorId",
+                        name: "FK_Blogs_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -183,7 +183,7 @@ namespace BloggingPlatform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Articles",
+                name: "Posts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -195,11 +195,11 @@ namespace BloggingPlatform.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Articles_Blog_BlogId",
+                        name: "FK_Posts_Blogs_BlogId",
                         column: x => x.BlogId,
-                        principalTable: "Blog",
+                        principalTable: "Blogs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -222,15 +222,15 @@ namespace BloggingPlatform.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Comment_Articles_PostId",
+                        name: "FK_Comment_Posts_PostId",
                         column: x => x.PostId,
-                        principalTable: "Articles",
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Like",
+                name: "Likes",
                 columns: table => new
                 {
                     PostId = table.Column<int>(nullable: false),
@@ -238,25 +238,20 @@ namespace BloggingPlatform.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Like", x => new { x.PostId, x.LikerId });
+                    table.PrimaryKey("PK_Likes", x => new { x.PostId, x.LikerId });
                     table.ForeignKey(
-                        name: "FK_Like_AspNetUsers_LikerId",
+                        name: "FK_Likes_AspNetUsers_LikerId",
                         column: x => x.LikerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Like_Articles_PostId",
+                        name: "FK_Likes_Posts_PostId",
                         column: x => x.PostId,
-                        principalTable: "Articles",
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Articles_BlogId",
-                table: "Articles",
-                column: "BlogId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -298,8 +293,8 @@ namespace BloggingPlatform.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Blog_AuthorId",
-                table: "Blog",
+                name: "IX_Blogs_AuthorId",
+                table: "Blogs",
                 column: "AuthorId",
                 unique: true);
 
@@ -309,9 +304,14 @@ namespace BloggingPlatform.Migrations
                 column: "CommenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_LikerId",
-                table: "Like",
+                name: "IX_Likes_LikerId",
+                table: "Likes",
                 column: "LikerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_BlogId",
+                table: "Posts",
+                column: "BlogId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -335,16 +335,16 @@ namespace BloggingPlatform.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
-                name: "Like");
+                name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Articles");
+                name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Blog");
+                name: "Blogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloggingPlatform.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200216121518_AddBasicBlogStructure")]
-    partial class AddBasicBlogStructure
+    [Migration("20200219120429_PropertiesUpdate")]
+    partial class PropertiesUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,7 @@ namespace BloggingPlatform.Migrations
                     b.HasIndex("AuthorId")
                         .IsUnique();
 
-                    b.ToTable("Blog");
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Comment", b =>
@@ -72,7 +72,7 @@ namespace BloggingPlatform.Migrations
 
                     b.HasIndex("LikerId");
 
-                    b.ToTable("Like");
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Post", b =>
@@ -98,7 +98,7 @@ namespace BloggingPlatform.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.Role", b =>
