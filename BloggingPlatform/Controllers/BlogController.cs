@@ -12,47 +12,33 @@ using System.Threading.Tasks;
 
 namespace BloggingPlatform.Controllers
 {
-    [Route("api/users/{userId}/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class BlogController : ControllerBase
     {
         private readonly IBlogService service;
         private readonly IMapper mapper;
-        private readonly IUsersService usersService;
-        public BlogController(IBlogService service, IMapper mapper, IUsersService usersService)
+        public BlogController(IBlogService service, IMapper mapper)
         {
             this.service = service;
             this.mapper = mapper;
-            this.usersService = usersService;
         }
 
-        [HttpPost("{blogId}/post")]
-        public async Task<IActionResult> AddPost(int userId, int blogId, NewPostDto newPostDto)
+        [AllowAnonymous]
+        [HttpGet("{blogName}/post/{id}")]
+        public async Task<IActionResult> GetPost(int id)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var post = await service.GetPost(id);
+
+            if (post == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
 
-            var user = await usersService.GetUser(userId);
+            var article = mapper.Map<ArticleToReturnDto>(post);
 
-            if (user.Blog.Id != blogId)
-            {
-                return Unauthorized();
-            }
-
-            newPostDto.BlogId = blogId;
-            var post = mapper.Map<Post>(newPostDto);
-
-            service.Add<Post>(post);
-
-            if (await service.SaveAll())
-            {
-                return Ok();
-            }
-
-            return BadRequest("Failed to add post");
+            return Ok(article);
         }
     }
 }

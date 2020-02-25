@@ -41,5 +41,11 @@ namespace BloggingPlatform.Services
             return await PostsList<Post>.CreateAsync(posts, postsListParams.PartNumber, postsListParams.PartSize);
         }
 
+        public async Task<Post> GetPost(int postId)
+        {
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            return post;
+        }
+
     }
 }
