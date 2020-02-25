@@ -60,7 +60,7 @@ namespace BloggingPlatform.Data
                 .HasOne(p => p.Post)
                 .WithMany(l => l.Likes)
                 .HasForeignKey(k => k.PostId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Like>()
                 .HasOne(u => u.Liker)
@@ -77,7 +77,7 @@ namespace BloggingPlatform.Data
                 .HasOne(p => p.Post)
                 .WithMany(c => c.Comments)
                 .HasForeignKey(k => k.PostId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment>()
                 .HasOne(u => u.Commenter)

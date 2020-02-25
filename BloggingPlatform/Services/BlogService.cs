@@ -18,20 +18,6 @@ namespace BloggingPlatform.Services
             this.context = context;
         }
 
-        public void Add<T>(T entity) where T : class
-        {
-            context.Add(entity);
-        }
-
-        public void Delete<T>(T entity) where T : class
-        {
-            context.Remove(entity);
-        }
-
-        public async Task<bool> SaveAll()
-        {
-            return await context.SaveChangesAsync() > 0;
-        }
         public async Task<PostsList<Post>> GetPostsList(PostsListParams postsListParams)
         {
             var posts = context.Posts

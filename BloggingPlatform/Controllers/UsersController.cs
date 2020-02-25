@@ -17,11 +17,14 @@ namespace BloggingPlatform.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
+        private readonly IUsersService usersService;
+        private readonly IBlogService blogService;
         private readonly IMapper mapper;
-        private readonly IUsersService service;
-        public UsersController(IMapper mapper, IUsersService service)
+
+        public UsersController(IMapper mapper, IUsersService usersService, IBlogService blogService)
         {
-            this.service = service;
+            this.usersService = usersService;
+            this.blogService = blogService;
             this.mapper = mapper;
         }
 
@@ -33,7 +36,7 @@ namespace BloggingPlatform.Controllers
                 return Unauthorized();
             }
 
-            var user = await service.GetUser(userId);
+            var user = await usersService.GetUser(userId);
 
             if (!user.Blog.BlogName.Equals(blogName))
             {
@@ -43,14 +46,33 @@ namespace BloggingPlatform.Controllers
             newPostDto.BlogId = user.Blog.Id;
             var post = mapper.Map<Post>(newPostDto);
 
-            service.Add<Post>(post);
+            usersService.Add<Post>(post);
 
-            if (await service.SaveAll())
+            if (await usersService.SaveAll())
             {
                 return Ok();
             }
 
             return BadRequest("Failed to add post");
+        }
+
+        [HttpDelete("{userId}/{blogName}/post/{postId}")]
+        public async Task<IActionResult> DeletePost(int userId, int postId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var postToDelete = await blogService.GetPost(postId);
+            usersService.Delete<Post>(postToDelete);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete post");
         }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloggingPlatform.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200219120429_PropertiesUpdate")]
-    partial class PropertiesUpdate
+    [Migration("20200225150446_MigrationsUpdated")]
+    partial class MigrationsUpdated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -342,7 +342,7 @@ namespace BloggingPlatform.Migrations
                     b.HasOne("BloggingPlatform.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -357,7 +357,7 @@ namespace BloggingPlatform.Migrations
                     b.HasOne("BloggingPlatform.Models.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

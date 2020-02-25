@@ -340,7 +340,7 @@ namespace BloggingPlatform.Migrations
                     b.HasOne("BloggingPlatform.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -355,7 +355,7 @@ namespace BloggingPlatform.Migrations
                     b.HasOne("BloggingPlatform.Models.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
