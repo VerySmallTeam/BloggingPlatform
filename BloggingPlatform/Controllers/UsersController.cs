@@ -65,6 +65,7 @@ namespace BloggingPlatform.Controllers
             }
 
             var postToDelete = await blogService.GetPost(postId);
+
             usersService.Delete<Post>(postToDelete);
 
             if (await usersService.SaveAll())
@@ -73,6 +74,72 @@ namespace BloggingPlatform.Controllers
             }
 
             return BadRequest("Failed to delete post");
+        }
+
+        [HttpPost("{userId}/{blogName}/post/like/{postId}")]
+        public async Task<IActionResult> LikePost(int postId, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var like = await usersService.GetLike(postId, userId);
+
+            if (like != null)
+            {
+                return BadRequest("You already like this post");
+            }
+
+            if (await blogService.GetPost(postId) == null)
+            {
+                return NotFound();
+            }
+
+            if (await usersService.GetPostOwnerId(postId) == userId)
+            {
+                return BadRequest("You can not like your own post");
+            }
+
+            like = new Like
+            {
+                PostId = postId,
+                LikerId = userId
+            };
+
+            usersService.Add<Like>(like);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to like post");
+        }
+
+        [HttpDelete("{userId}/{blogName}/post/like/{postId}")]
+        public async Task<IActionResult> UnlikePost(int userId, int postId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var like = await usersService.GetLike(postId, userId);
+
+            if (like == null)
+            {
+                return NotFound();
+            }
+
+            usersService.Delete<Like>(like);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to unlike post");
         }
     }
 }

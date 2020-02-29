@@ -12,5 +12,7 @@ namespace BloggingPlatform.Interfaces
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
         Task<User> GetUser(int id);
+        Task<int> GetPostOwnerId(int postId);
+        Task<Like> GetLike(int postId, int likerId);
     }
 }

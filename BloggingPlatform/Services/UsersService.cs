@@ -37,5 +37,17 @@ namespace BloggingPlatform.Services
             var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
+
+        public async Task<int> GetPostOwnerId(int postId)
+        {
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            return post.Blog.AuthorId;
+        }
+
+        public async Task<Like> GetLike(int postId, int likerId)
+        {
+            var like = await context.Likes.FirstOrDefaultAsync(id => id.PostId == postId && id.LikerId == likerId);
+            return like;
+        }
     }
 }
