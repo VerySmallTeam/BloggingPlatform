@@ -12,6 +12,7 @@ namespace BloggingPlatform.DTO
         public DateTime DateAdded { get; set; }
         public string AuthorFirstName { get; set; }
         public string AuthorLastName { get; set; }
+        public string BlogName { get; set; }
         public int Likes { get; set; }
     }
 }

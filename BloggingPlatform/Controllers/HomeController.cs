@@ -33,6 +33,5 @@ namespace BloggingPlatform.Controllers
             Response.AddPostHeader(posts.CurrentPart, posts.PartSize);
             return Ok(postToReturn);
         }
-        
     }
 }

@@ -21,7 +21,8 @@ namespace BloggingPlatform.Data.Configs
                 .ForMember(ln => ln.AuthorLastName, opt => opt.MapFrom(
                     src => src.Blog.Author.LastName))
                 .ForMember(l => l.Likes, opt => opt.MapFrom(
-                    src => src.Likes.Count));
+                    src => src.Likes.Count))
+                .ForMember(n => n.BlogName, opt => opt.MapFrom(src => src.Blog.BlogName));
             CreateMap<Post, ArticleToReturnDto>()
                 .ForMember(fn => fn.AuthorFirstName, opt => opt.MapFrom(
                     src => src.Blog.Author.FirstName))
