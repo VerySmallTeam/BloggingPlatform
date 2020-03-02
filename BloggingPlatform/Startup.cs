@@ -61,8 +61,13 @@ namespace BloggingPlatform
                         ValidateAudience = false //localhost
                     };
                 });
+            services.AddCors();
 
-            services.AddDbContext<DataContext>(cont => cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(cont => 
+            {
+                cont.UseLazyLoadingProxies();
+                cont.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); 
+            });
 
             services.AddControllers(options =>
             {
@@ -77,6 +82,8 @@ namespace BloggingPlatform
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(AuthService).Assembly);
+            services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddControllers();
         }
 
@@ -108,6 +115,8 @@ namespace BloggingPlatform
             //app.UseHttpsRedirection();
 
             app.UseAuthentication();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
 

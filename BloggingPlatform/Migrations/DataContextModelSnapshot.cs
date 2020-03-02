@@ -15,9 +15,89 @@ namespace BloggingPlatform.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BloggingPlatform.Models.Blog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BlogName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId")
+                        .IsUnique();
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Comment", b =>
+                {
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommenterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PostId", "CommenterId");
+
+                    b.HasIndex("CommenterId");
+
+                    b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Like", b =>
+                {
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostId", "LikerId");
+
+                    b.HasIndex("LikerId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Posts");
+                });
 
             modelBuilder.Entity("BloggingPlatform.Models.Role", b =>
                 {
@@ -238,6 +318,54 @@ namespace BloggingPlatform.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Blog", b =>
+                {
+                    b.HasOne("BloggingPlatform.Models.User", "Author")
+                        .WithOne("Blog")
+                        .HasForeignKey("BloggingPlatform.Models.Blog", "AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Comment", b =>
+                {
+                    b.HasOne("BloggingPlatform.Models.User", "Commenter")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BloggingPlatform.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Like", b =>
+                {
+                    b.HasOne("BloggingPlatform.Models.User", "Liker")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BloggingPlatform.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BloggingPlatform.Models.Post", b =>
+                {
+                    b.HasOne("BloggingPlatform.Models.Blog", "Blog")
+                        .WithMany("Posts")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BloggingPlatform.Models.UserRole", b =>
