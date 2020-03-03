@@ -33,5 +33,14 @@ namespace BloggingPlatform.Controllers
             Response.AddPostHeader(posts.CurrentPart, posts.PartSize);
             return Ok(postToReturn);
         }
+
+        [AllowAnonymous]
+        [HttpGet("get-top-posts")]
+        public async Task<IActionResult> GetTopPosts()
+        {
+            var posts = await service.GetTopPosts();
+            var postToReturn = mapper.Map<IEnumerable<PostToReturnDto>>(posts);
+            return Ok(postToReturn);
+        }
     }
 }

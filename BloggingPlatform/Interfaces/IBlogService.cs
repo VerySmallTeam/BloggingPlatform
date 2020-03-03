@@ -11,5 +11,7 @@ namespace BloggingPlatform.Interfaces
     {
         Task<PostsList<Post>> GetPostsList(PostsListParams postsListParams);
         Task<Post> GetPost(int id);
+        //Task<PostsList<Post>> GetTopPosts();
+        Task<List<Post>> GetTopPosts();
     }
 }

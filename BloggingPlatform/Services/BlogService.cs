@@ -33,5 +33,15 @@ namespace BloggingPlatform.Services
             return post;
         }
 
+        public async Task<List<Post>> GetTopPosts()
+        {
+            var posts = await context.Posts
+               .OrderByDescending(p => p.Likes.Count())
+               .Take(5)
+               .ToListAsync();
+
+            return posts;
+        }
+
     }
 }
