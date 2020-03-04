@@ -34,7 +34,6 @@ namespace BloggingPlatform.Controllers
             return Ok(postToReturn);
         }
 
-        [AllowAnonymous]
         [HttpGet("get-top-posts")]
         public async Task<IActionResult> GetTopPosts()
         {
