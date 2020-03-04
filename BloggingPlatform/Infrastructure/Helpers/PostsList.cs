@@ -16,10 +16,20 @@ namespace BloggingPlatform.Infrastructure.Helpers
             PartSize = partSize;
             AddRange(items);
         }
+        public PostsList(List<T> items)
+        {
+            AddRange(items);
+        }
+
         public static async Task<PostsList<T>> CreateAsync(IQueryable<T> posts, int partNumber, int partSize)
         {
             var items = await posts.Skip((partNumber - 1) * partSize).Take(partSize).ToListAsync();
             return new PostsList<T>(items, partNumber, partSize);
+        }
+        public static async Task<PostsList<T>> CreateAsyncTopPosts(IQueryable<T> posts)
+        {
+            var items = await posts.Take(5).ToListAsync();
+            return new PostsList<T>(items);
         }
     }
 }
