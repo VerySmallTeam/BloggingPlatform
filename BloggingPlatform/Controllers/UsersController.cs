@@ -171,5 +171,30 @@ namespace BloggingPlatform.Controllers
 
             return BadRequest("Failed to add comment");
         }
+
+        [HttpDelete("{userId}/posts/{postId}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment(int userId, int postId, int commentId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var comment = await blogService.GetCommentById(postId, userId, commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            usersService.Delete<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete comment");
+        }
     }
 }
