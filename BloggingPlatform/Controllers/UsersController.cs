@@ -143,5 +143,33 @@ namespace BloggingPlatform.Controllers
 
             return BadRequest("Failed to unlike post");
         }
+
+        [HttpPost("{userId}/posts/{postId}/comments/add-comment")]
+        public async Task<IActionResult> AddComment(int userId, int postId, NewCommentDto newCommentDto)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            if (await blogService.GetPost(postId) == null)
+            {
+                return NotFound();
+            }
+
+            newCommentDto.PostId = postId;
+            newCommentDto.CommenterId = userId;
+
+            var comment = mapper.Map<Comment>(newCommentDto);
+
+            usersService.Add<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to add comment");
+        }
     }
 }
