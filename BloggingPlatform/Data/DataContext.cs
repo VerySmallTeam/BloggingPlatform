@@ -17,7 +17,7 @@ namespace BloggingPlatform.Data
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -71,20 +71,11 @@ namespace BloggingPlatform.Data
             #endregion
 
             #region Comment
-            builder.Entity<Comment>()
-               .HasKey(k => new { k.PostId, k.CommenterId });
-
-            builder.Entity<Comment>()
-                .HasOne(p => p.Post)
-                .WithMany(c => c.Comments)
+            builder.Entity<Post>()
+                .HasMany(p => p.Comments)
+                .WithOne(b => b.Post)
                 .HasForeignKey(k => k.PostId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Comment>()
-                .HasOne(u => u.Commenter)
-                .WithMany(c => c.Comments)
-                .HasForeignKey(k => k.CommenterId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
             #endregion
         }
     }

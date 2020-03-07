@@ -43,5 +43,21 @@ namespace BloggingPlatform.Services
             return posts;
         }
 
+        public async Task<Comment> GetComment(int postId, int commenterId)
+        {
+            var comment = await context.Comments
+                .FirstOrDefaultAsync(id => id.PostId == postId && id.CommenterId == commenterId);
+
+            return comment;
+        }
+
+        public async Task<Comment> GetCommentById(int postId, int commenterId, int commentId)
+        {
+            var comment = await context.Comments
+                .FirstOrDefaultAsync(id => id.PostId == postId && id.CommenterId == commenterId && id.Id == commentId);
+
+            return comment;
+        }
+
     }
 }

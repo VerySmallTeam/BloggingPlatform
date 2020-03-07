@@ -12,5 +12,7 @@ namespace BloggingPlatform.Interfaces
         Task<PostsList<Post>> GetPostsList(PostsListParams postsListParams);
         Task<Post> GetPost(int id);
         Task<List<Post>> GetTopPosts();
+        Task<Comment> GetComment(int postId, int commenterId);
+        Task<Comment> GetCommentById(int postId, int commentrerId, int commentId);
     }
 }

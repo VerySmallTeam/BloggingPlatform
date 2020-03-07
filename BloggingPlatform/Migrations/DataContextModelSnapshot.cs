@@ -42,8 +42,10 @@ namespace BloggingPlatform.Migrations
 
             modelBuilder.Entity("BloggingPlatform.Models.Comment", b =>
                 {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CommenterId")
                         .HasColumnType("int");
@@ -51,9 +53,14 @@ namespace BloggingPlatform.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PostId", "CommenterId");
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CommenterId");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comments");
                 });
@@ -334,13 +341,13 @@ namespace BloggingPlatform.Migrations
                     b.HasOne("BloggingPlatform.Models.User", "Commenter")
                         .WithMany("Comments")
                         .HasForeignKey("CommenterId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BloggingPlatform.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

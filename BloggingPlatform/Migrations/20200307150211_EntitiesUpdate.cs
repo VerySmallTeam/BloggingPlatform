@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BloggingPlatform.Migrations
 {
-    public partial class NewMigration : Migration
+    public partial class EntitiesUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -205,28 +205,29 @@ namespace BloggingPlatform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PostId = table.Column<int>(nullable: false),
                     CommenterId = table.Column<int>(nullable: false),
                     Content = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => new { x.PostId, x.CommenterId });
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_AspNetUsers_CommenterId",
+                        name: "FK_Comments_AspNetUsers_CommenterId",
                         column: x => x.CommenterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comment_Posts_PostId",
+                        name: "FK_Comments_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -299,9 +300,14 @@ namespace BloggingPlatform.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_CommenterId",
-                table: "Comment",
+                name: "IX_Comments_CommenterId",
+                table: "Comments",
                 column: "CommenterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_LikerId",
@@ -332,7 +338,7 @@ namespace BloggingPlatform.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Likes");
