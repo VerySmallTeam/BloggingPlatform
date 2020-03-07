@@ -86,13 +86,6 @@ namespace BloggingPlatform.Controllers
                 return Unauthorized();
             }
 
-            var like = await usersService.GetLike(postId, userId);
-
-            if (like != null)
-            {
-                return BadRequest("You already like this post");
-            }
-
             if (await blogService.GetPost(postId) == null)
             {
                 return NotFound();
@@ -101,6 +94,13 @@ namespace BloggingPlatform.Controllers
             if (await usersService.GetPostOwnerId(postId) == userId)
             {
                 return BadRequest("You can not like your own post");
+            }
+
+            var like = await usersService.GetLike(postId, userId);
+
+            if (like != null)
+            {
+                return BadRequest("You already like this post");
             }
 
             like = new Like
