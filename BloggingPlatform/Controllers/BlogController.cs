@@ -26,7 +26,7 @@ namespace BloggingPlatform.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{blogName}/post/{id}")]
+        [HttpGet("posts/{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
             var post = await service.GetPost(id);

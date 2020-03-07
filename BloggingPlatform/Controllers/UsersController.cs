@@ -28,8 +28,8 @@ namespace BloggingPlatform.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost("{userId}/{blogName}/create-new-post")]
-        public async Task<IActionResult> AddPost(int userId, string blogName, NewPostDto newPostDto)
+        [HttpPost("{userId}/posts/create-new-post")]
+        public async Task<IActionResult> AddPost(int userId, NewPostDto newPostDto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
@@ -37,11 +37,6 @@ namespace BloggingPlatform.Controllers
             }
 
             var user = await usersService.GetUser(userId);
-
-            if (!user.Blog.BlogName.Equals(blogName))
-            {
-                return Unauthorized();
-            }
 
             newPostDto.BlogId = user.Blog.Id;
             var post = mapper.Map<Post>(newPostDto);
@@ -56,10 +51,17 @@ namespace BloggingPlatform.Controllers
             return BadRequest("Failed to add post");
         }
 
-        [HttpDelete("{userId}/{blogName}/post/{postId}")]
+        [HttpDelete("{userId}/posts/{postId}")]
         public async Task<IActionResult> DeletePost(int userId, int postId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var user = await usersService.GetUser(userId);
+
+            if (user.Blog.Posts.FirstOrDefault(p => p.Id == postId).Id != postId)
             {
                 return Unauthorized();
             }
@@ -76,19 +78,12 @@ namespace BloggingPlatform.Controllers
             return BadRequest("Failed to delete post");
         }
 
-        [HttpPost("{userId}/{blogName}/post/like/{postId}")]
+        [HttpPost("{userId}/posts/like/{postId}")]
         public async Task<IActionResult> LikePost(int postId, int userId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
                 return Unauthorized();
-            }
-
-            var like = await usersService.GetLike(postId, userId);
-
-            if (like != null)
-            {
-                return BadRequest("You already like this post");
             }
 
             if (await blogService.GetPost(postId) == null)
@@ -99,6 +94,13 @@ namespace BloggingPlatform.Controllers
             if (await usersService.GetPostOwnerId(postId) == userId)
             {
                 return BadRequest("You can not like your own post");
+            }
+
+            var like = await usersService.GetLike(postId, userId);
+
+            if (like != null)
+            {
+                return BadRequest("You already like this post");
             }
 
             like = new Like
@@ -117,7 +119,7 @@ namespace BloggingPlatform.Controllers
             return BadRequest("Failed to like post");
         }
 
-        [HttpDelete("{userId}/{blogName}/post/like/{postId}")]
+        [HttpDelete("{userId}/posts/like/{postId}")]
         public async Task<IActionResult> UnlikePost(int userId, int postId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
