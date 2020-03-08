@@ -196,5 +196,33 @@ namespace BloggingPlatform.Controllers
 
             return BadRequest("Failed to delete comment");
         }
+
+        [HttpPatch("{userId}/posts/{postId}/comments/{commentId}")]
+        public async Task<IActionResult> EditComment(int userId, int postId, int commentId, UpdatedCommentDto updatedCommentDto)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var comment = await blogService.GetCommentById(postId, userId, commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            comment.Content = updatedCommentDto.Content;
+
+            usersService.Update<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to edit comment");
+        }
+
     }
 }
