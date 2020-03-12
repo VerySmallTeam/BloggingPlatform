@@ -143,5 +143,86 @@ namespace BloggingPlatform.Controllers
 
             return BadRequest("Failed to unlike post");
         }
+
+        [HttpPost("{userId}/posts/{postId}/comments/add-comment")]
+        public async Task<IActionResult> AddComment(int userId, int postId, NewCommentDto newCommentDto)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            if (await blogService.GetPost(postId) == null)
+            {
+                return NotFound();
+            }
+
+            newCommentDto.PostId = postId;
+            newCommentDto.CommenterId = userId;
+
+            var comment = mapper.Map<Comment>(newCommentDto);
+
+            usersService.Add<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to add comment");
+        }
+
+        [HttpDelete("{userId}/posts/{postId}/comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment(int userId, int postId, int commentId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var comment = await blogService.GetCommentById(postId, userId, commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            usersService.Delete<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete comment");
+        }
+
+        [HttpPatch("{userId}/posts/{postId}/comments/{commentId}")]
+        public async Task<IActionResult> EditComment(int userId, int postId, int commentId, UpdatedCommentDto updatedCommentDto)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var comment = await blogService.GetCommentById(postId, userId, commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            comment.Content = updatedCommentDto.Content;
+
+            usersService.Update<Comment>(comment);
+
+            if (await usersService.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to edit comment");
+        }
+
     }
 }

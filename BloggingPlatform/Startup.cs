@@ -114,13 +114,14 @@ namespace BloggingPlatform
 
             //app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

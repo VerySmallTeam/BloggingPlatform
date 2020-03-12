@@ -27,6 +27,11 @@ namespace BloggingPlatform.Services
             context.Remove(entity);
         }
 
+        public void Update<T>(T entity) where T : class
+        {
+            context.Update(entity);
+        }
+
         public async Task<bool> SaveAll()
         {
             return await context.SaveChangesAsync() > 0;

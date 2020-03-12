@@ -30,6 +30,7 @@ namespace BloggingPlatform.Data.Configs
                     src => src.Blog.Author.LastName))
                 .ForMember(l => l.Likes, opt => opt.MapFrom(
                     src => src.Likes.Count));
+            CreateMap<NewCommentDto, Comment>();
         }
     }
 }
