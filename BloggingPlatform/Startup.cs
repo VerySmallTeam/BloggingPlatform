@@ -86,6 +86,7 @@ namespace BloggingPlatform
                 .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
 
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(AuthService).Assembly);
             services.AddScoped<IBlogService, BlogService>();
