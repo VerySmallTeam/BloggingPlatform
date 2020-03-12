@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BloggingPlatform.Data;
+using BloggingPlatform.Data.Configs;
 using BloggingPlatform.Infrastructure.Extensions;
 using BloggingPlatform.Interfaces;
 using BloggingPlatform.Models;
@@ -79,6 +80,11 @@ namespace BloggingPlatform
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddAutoMapper(typeof(AuthService).Assembly);
