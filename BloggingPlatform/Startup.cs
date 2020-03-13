@@ -43,7 +43,8 @@ namespace BloggingPlatform
         {
             IdentityBuilder builder = services.AddIdentityCore<User>(options => {
                 options.User.RequireUniqueEmail = true;
-            });
+            })
+                .AddDefaultTokenProviders();
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -62,6 +63,7 @@ namespace BloggingPlatform
                         ValidateAudience = false //localhost
                     };
                 });
+            services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
             services.AddCors();
 
             services.AddDbContext<DataContext>(cont => 

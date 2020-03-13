@@ -46,7 +46,6 @@ namespace BloggingPlatform.Services
                     await client.ConnectAsync(this.emailConfig.SmtpServer, this.emailConfig.Port, true);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
                     await client.AuthenticateAsync(this.emailConfig.UserName, this.emailConfig.Password);
-
                     await client.SendAsync(mailMessage);
                 }
                 catch
