@@ -63,6 +63,12 @@ namespace BloggingPlatform
                         ValidateAudience = false //localhost
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Administrator"));
+            });
+
             services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
             services.AddCors();
 
