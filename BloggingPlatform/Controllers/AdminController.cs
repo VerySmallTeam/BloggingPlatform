@@ -1,4 +1,5 @@
 ﻿using BloggingPlatform.Data;
+using BloggingPlatform.DTO;
 using BloggingPlatform.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,33 @@ namespace BloggingPlatform.Controllers
                 }).ToListAsync();
 
             return Ok(userList);
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpPost("editRoles/{userName}")]
+        public async Task<IActionResult> EditRoles(string userName, EditRolesDto editRolesDto)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            var userRoles = await userManager.GetRolesAsync(user);
+            var selectedRoles = editRolesDto.RoleNames;
+
+            selectedRoles = selectedRoles ?? new string[] { };
+
+            var result = await userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
+
+            if (!result.Succeeded)
+            {
+                return BadRequest("Failes to add to roles");
+            }
+
+            result = await userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
+
+            if (!result.Succeeded)
+            {
+                return BadRequest("Failed to remove the roles");
+            }
+
+            return Ok(await userManager.GetRolesAsync(user));
         }
     }
 }
